@@ -23,7 +23,7 @@ exec 2> >(tee -ia /root/make-kamikaze.log >&2)
 
 # STAGING: 
 # Copy uboot files to /boot/uboot
-# Restart commands on install for Redeem and Toggle
+# Restart commands on install for Redeem
 # Update to Clutter 1.26.0+dsfg-1
 
 # DONE: 
@@ -31,7 +31,6 @@ exec 2> >(tee -ia /root/make-kamikaze.log >&2)
 # sgx-install after changing kernel
 # Custom uboot
 # redeem plugin
-# Toggle plugin
 # Install libyaml
 # redeem starts after spidev2.1
 # Adafruit lib disregard overlay (Swithed to spidev)
@@ -39,9 +38,7 @@ exec 2> >(tee -ia /root/make-kamikaze.log >&2)
 # iptables-persistent https://github.com/eliasbakken/Kamikaze2/releases/tag/v2.0.7rc1
 # clear cache
 # Update dogtag
-# Update Redeem / Toggle
 # Sync Redeem master with develop.  
-# Choose Toggle config
 
 # this defines the octoprint release tag version#
 OCTORELEASE="1.3.1"
@@ -83,20 +80,12 @@ install_dependencies(){
 	libyaml-dev \
 	gir1.2-mash-0.3-0 \
 	gir1.2-mx-2.0 \
-	libcogl20 \
-	libclutter-1.0-0 \
-	libclutter-imcontext-0.1-0 \
-	libcluttergesture-0.0.2-0 \
 	python-scipy \
 	python-smbus \
 	python-gi-cairo \
 	python-numpy \
 	libavahi-compat-libdnssd1 \
-	libclutter-1.0-common \
-	libclutter-imcontext-0.1-bin \
-	libcogl-common \
-	libmx-bin
-
+	
 	pip install --upgrade pip
 	pip install setuptools
 	pip install evdev spidev Adafruit_BBIO
@@ -197,15 +186,13 @@ install_octoprint() {
 
 	# Grant octo redeem restart rights
 	echo "%octo ALL=NOPASSWD: /bin/systemctl restart redeem.service" >> /etc/sudoers
-	echo "%octo ALL=NOPASSWD: /bin/systemctl restart toggle.service" >> /etc/sudoers
 	echo "%octo ALL=NOPASSWD: /bin/systemctl restart octoprint.service" >> /etc/sudoers
 	echo "%octo ALL=NOPASSWD: /sbin/reboot" >> /etc/sudoers
 	echo "%octo ALL=NOPASSWD: /sbin/shutdown -h now" >> /etc/sudoers
 	echo "%octo ALL=NOPASSWD: /sbin/poweroff" >> /etc/sudoers
 
 	echo "%octo ALL=NOPASSWD: /usr/bin/make -C /usr/src/redeem install" >> /etc/sudoers
-	echo "%octo ALL=NOPASSWD: /usr/bin/make -C /usr/src/toggle install" >> /etc/sudoers
-
+	
 	# Install systemd script
 	cp ./OctoPrint/octoprint.service /lib/systemd/system/
 	systemctl enable octoprint
@@ -222,16 +209,6 @@ install_octoprint_redeem() {
 	python setup.py install
 }
 
-install_octoprint_toggle() {
-	echo "**install_octoprint_toggle**"
-	cd /usr/src
-	if [ ! -d "octoprint_toggle" ]; then
-		git clone --depth 1 https://github.com/eliasbakken/octoprint_toggle
-	fi
-	cd octoprint_toggle
-	python setup.py install
-}
-
 install_overlays() {
 	echo "**install_overlays**"
 	cd /usr/src/
@@ -240,23 +217,6 @@ install_overlays() {
 	fi
 	cd bb.org-overlays
 	./install.sh
-}
-
-install_toggle() {
-	echo "** install toggle **"
-	cd /usr/src
-    	if [ ! -d "toggle" ]; then
-		git clone --depth 1 https://bitbucket.org/intelligentagent/toggle
-    	fi
-	cd toggle
-	python setup.py clean install
-	# Make it writable for updates
-	cp -r configs /etc/toggle
-	chown -R octo:octo /usr/src/toggle/
-	cp systemd/toggle.service /lib/systemd/system/
-	systemctl enable toggle
-	systemctl start toggle
-	chown -R octo:octo /etc/toggle/
 }
 
 install_cura() {
@@ -429,9 +389,7 @@ dist() {
 	install_redeem
 	install_octoprint
 	install_octoprint_redeem
-	install_octoprint_toggle
 	install_overlays
-	install_toggle
 	install_cura
 	install_uboot
 	other

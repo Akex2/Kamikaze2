@@ -70,7 +70,7 @@ install_dependencies(){
 	echo "** Install dependencies **"
 	echo "APT::Install-Recommends \"false\";" > /etc/apt/apt.conf.d/99local
 	echo "APT::Install-Suggests \"false\";" >> /etc/apt/apt.conf.d/99local
-	apt-get install -y libegl1-sgx-omap3 libgles2-sgx-omap3
+	#apt-get install -y libegl1-sgx-omap3 libgles2-sgx-omap3
 	apt-get install -y \
 	python-pip \
 	python-dev \

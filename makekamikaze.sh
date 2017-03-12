@@ -66,7 +66,7 @@ EOL
 
 install_dependencies(){
 	echo "** Removing old kernels **"
-	apt-get purge -y linux-image-4.4.40-ti* linux-image-4.9* rtl8723bu-modules-4.4.30-ti* rtl8723bu-modules-4.9*
+	#apt-get purge -y linux-image-4.4.40-ti* linux-image-4.9* rtl8723bu-modules-4.4.30-ti* rtl8723bu-modules-4.9*
 	echo "** Install dependencies **"
 	echo "APT::Install-Recommends \"false\";" > /etc/apt/apt.conf.d/99local
 	echo "APT::Install-Suggests \"false\";" >> /etc/apt/apt.conf.d/99local
@@ -161,7 +161,7 @@ install_octoprint() {
 	chown -R octo:octo /usr/local/bin/
 	su - octo -c 'cd OctoPrint && python setup.py clean install'
 	su - octo -c 'pip install https://github.com/Salandora/OctoPrint-FileManager/archive/master.zip --user'
-	su - octo -c 'pip install https://github.com/kennethjiang/OctoPrint-Slicer/archive/master.zip --user'
+	#su - octo -c 'pip install https://github.com/kennethjiang/OctoPrint-Slicer/archive/master.zip --user'
 
 	cd /usr/src/Kamikaze2
 	# Make config file for Octoprint
@@ -314,7 +314,7 @@ rename_ssh() {
 	echo "** Update SSH message **"
 	cat > /etc/issue.net << EOL
 $VERSION
-rcn-ee.net console Ubuntu Image 2017-01-13
+rcn-ee.net console Ubuntu Image 2017-01-13 Akex on BBB
 
 Check that nothing is printing before any CPU/disk intensive operations!
 EOL

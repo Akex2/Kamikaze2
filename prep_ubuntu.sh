@@ -36,24 +36,6 @@ EOL
 	apt-get update
 }
 
-wlan_fixes() {
-	echo "** Install wireless firmware **"
-	#add BBB wireless firmware for wireless boards.
-	git clone --depth 1 git://git.ti.com/wilink8-wlan/wl18xx_fw.git /usr/src/wl18xx_fw
-	cp /usr/src/wl18xx_fw/wl18xx-fw-4.bin /lib/firmware/ti-connectivity/
-	rm -rf /usr/src/wl18xx_fw/
-
-	echo "** Disable wireless power management **"
-	mkdir -p /etc/pm/sleep.d
-	touch /etc/pm/sleep.d/wireless
-
-	echo "** Install Network Manager **"
-	apt-get -y install network-manager
-	ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
-	sed -i 's/^\[main\]/\[main\]\ndhcp=internal/' /etc/NetworkManager/NetworkManager.conf
-	cp $WD/interfaces /etc/network/
-}
-
 remove_unneeded_packages() {
 	echo "** Remove unneded packages **"*
 	rm -rf /etc/apache2/sites-enabled
@@ -73,7 +55,6 @@ prep() {
 	network_fixes
 	prep_ubuntu
 	install_repo
-	wlan_fixes
 	remove_unneeded_packages
 	cleanup
 }

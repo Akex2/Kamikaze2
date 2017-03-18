@@ -282,7 +282,16 @@ EOF
 	systemctl start smbd
 }
 
-
+install_dummy_logging() {
+	echo "** Install dummy logging **"
+	apt-get install rungetty
+	useradd -m dummy
+	usermod -a -G systemd-journal dummy
+	echo "clear" >> /home/dummy/.profile
+	echo "journalctl -f" >> /home/dummy/.profile
+	text='ExecStart=-/sbin/getty -a dummy 115200 %I'
+	sed -i "/.*ExecStart*./ c $text" /etc/systemd/system/getty.target.wants/getty@tty1.service
+}
 
 install_mjpgstreamer() {
 	echo "** Install mjpgstreamer **"
@@ -331,6 +340,7 @@ dist() {
 	install_uboot
 	install_usbreset
 	install_smbd
+	install_dummy_logging
 	install_mjpgstreamer
 	rename_ssh
 }

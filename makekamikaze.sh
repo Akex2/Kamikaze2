@@ -134,7 +134,7 @@ install_redeem() {
 	# Install Kamikaze2 specific systemd script
 	cp scripts/redeem.service /lib/systemd/system
 	systemctl enable redeem
-	systemctl start redeem
+	#systemctl start redeem
 }
 
 install_octoprint() {
@@ -171,7 +171,7 @@ install_octoprint() {
 	# Install systemd script
 	cp ./OctoPrint/octoprint.service /lib/systemd/system/
 	systemctl enable octoprint
-	systemctl start octoprint
+	#systemctl start octoprint
 }
 
 install_octoprint_redeem() {
@@ -302,7 +302,7 @@ install_mjpgstreamer() {
  WantedBy=basic.target
 EOL
 	systemctl enable mjpg.service
-	systemctl start mjpg.service
+	#systemctl start mjpg.service
 }
 
 rename_ssh() {
